@@ -1,11 +1,12 @@
 import tensorflow as tf
+from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
 
 # -----------------------
 # 1. Load MNIST (training)
 # -----------------------
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
 x_train = x_train.astype("float32") / 255.0
 x_test  = x_test.astype("float32") / 255.0
@@ -16,12 +17,12 @@ x_test  = np.expand_dims(x_test, -1)
 # -----------------------
 # 2. Build simple CNN
 # -----------------------
-model = tf.keras.Sequential([
-    tf.keras.layers.Conv2D(32, (3,3), activation="relu", input_shape=(28,28,1)),
-    tf.keras.layers.MaxPooling2D(),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(64, activation="relu"),
-    tf.keras.layers.Dense(10, activation="softmax")
+model = keras.Sequential([
+    keras.layers.Conv2D(32, (3,3), activation="relu", input_shape=(28,28,1)),
+    keras.layers.MaxPooling2D(),
+    keras.layers.Flatten(),
+    keras.layers.Dense(64, activation="relu"),
+    keras.layers.Dense(10, activation="softmax")
 ])
 
 model.compile(
@@ -35,7 +36,7 @@ model.fit(x_train, y_train, epochs=1, batch_size=128)
 # -----------------------
 # 3. Adversarial example (FGSM)
 # -----------------------
-loss_fn = tf.keras.losses.SparseCategoricalCrossentropy()
+loss_fn = keras.losses.SparseCategoricalCrossentropy()
 
 def fgsm(model, x, y, eps=0.1):
     x_var = tf.cast(x, tf.float32)
@@ -85,7 +86,7 @@ plt.show()
 # -----------------------
 # 4. OOD example (Fashion-MNIST)
 # -----------------------
-(_, _), (x_fmnist, y_fmnist) = tf.keras.datasets.fashion_mnist.load_data()
+(_, _), (x_fmnist, y_fmnist) = keras.datasets.fashion_mnist.load_data()
 x_fmnist = x_fmnist.astype("float32") / 255.0
 x_fmnist = np.expand_dims(x_fmnist, -1)
 
